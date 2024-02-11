@@ -1,0 +1,62 @@
+//////////////////////////////
+// Serializacion de objetos //
+//////////////////////////////
+
+import java.io.*;
+public class Empleado implements Serializable {
+    String nombre;
+    int edad;
+    int sueldo;
+    public Empleado(String n, int e, int s) {
+        this.nombre = n;
+        this.edad = e;
+        this.sueldo = s;
+    }
+    public void print() {
+        System.out.println("Registro de " + nombre + ": ");
+        System.out.println("Nombre: " + nombre);
+        System.out.println("Edad: " + edad + " anios");
+        System.out.println("Sueldo: $" + sueldo + "\n");
+    }
+}
+
+import java.io.*;
+import java.util.zip.*;
+public class GuardaEmpleado{
+    public static void main(String argv[]) throws Exception {
+        Empleado e1 = new Empleado("Benito", 32, 10000);
+        Empleado e2 = new Empleado("Miguel", 40, 15000);
+        FileOutputStream fos = new FileOutputStream("Sistemas");
+        GZIPOutputStream gzos = new GZIPOutputStream(fos);
+        ObjectOutputStream oos = new ObjectOutputStream(gzos);
+        oos.writeObject(e1);
+        oos.writeObject(e2);
+        oos.flush();
+        oos.close();
+        fos.close();
+    }
+}
+
+import java.io.*;
+import java.util.zip.*;
+public class LeeEmpleado{
+    public static void main(String argv[]) throws Exception{
+        FileInputStream fis = new FileInputStream("Sistemas"); // C:\Users\escom\Nombre de Proyecto en NB
+        GZIPInputStream gs = new GZIPInputStream(fis);
+        ObjectInputStream ois = new ObjectInputStream(gs);
+        Empleado e1 = (Empleado) ois.readObject();
+        Empleado e2 = (Empleado) ois.readObject();
+        e1.print();
+        e2.print();
+        ois.close();
+        fis.close();
+    }
+} 
+
+
+
+
+
+
+
+

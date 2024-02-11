@@ -1,0 +1,15 @@
+<html>
+    <head>
+        <meta charset="utf-8"/>
+    </head>
+    <body>
+        <form action="xss1.php">
+            Nombre:
+            <input type="text" name="captura"/>
+            <input type="submit" value="enviar"/>
+        </form>
+        <script>
+            alert(String.fromCharCode(69,83,67,79,77,33))
+        </script>
+    </body>
+</html>

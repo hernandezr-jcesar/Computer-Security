@@ -1,0 +1,110 @@
+/////////////////////////////////////////
+// Compresión de texto y archivos ///////
+/////////////////////////////////////////
+
+import java.io.ByteArrayOutputStream;
+import java.util.zip.GZIPOutputStream;
+public class ComprimeTexto {
+    public ComprimeTexto(){
+        String texto = "“Mexicanos,?al? grito? de? guerra”?(1943) Francisco? González?\n" +
+                    "Bocanegra Jaime? Nunó? Roca\n" +
+                    "Mexicanos,?al? grito? de? guerra El? acero? aprestad? y? el? bridón, Y?\n" +
+                    "retiemble? en? sus? centros? la? tierra Al? sonoro? rugir? del? cañón. Y?\n" +
+                    "retiemble? en? sus? centros? la? tierra Al? sonoro? rugir? del? cañón.\n" +
+                    "Ciña? ¡oh? Patria!? tus? sienes? de? oliva De? la? paz? el? arcángel?\n" +
+                    "divino, Que? en? el? cielo? tu? eterno? destino, Por? el? dedo? de? Dios? se?\n" +
+                    "escribió; Mas? si? osare? un? extraño? enemigo, Profanar? con? su? planta?\n" +
+                    "tu? suelo, Piensa? ¡oh? Patria? querida!? que? el? cielo Un? soldado? en?\n" +
+                    "cada? hijo? te? dio, Un? soldado? en? cada? hijo? te? dio.";
+        ByteArrayOutputStream bos = new ByteArrayOutputStream(texto.length());
+        try{
+            GZIPOutputStream gzip = new GZIPOutputStream(bos);
+            gzip.write(texto.getBytes());
+            gzip.close();
+            byte [] b = bos.toByteArray();
+            bos.close();
+            String s = new String(b, "UTF-8");
+            System.out.println("Texto comprimido: " + s);
+            System.out.println("Compresión: " + s.length());
+        } catch(Exception e){ e.printStackTrace(); }
+    }
+    public static void main(String [] args){
+        new ComprimeTexto();
+    }
+}
+
+import java.io.*;
+import java.util.zip.*;
+public class Compresion2{
+    static final int BUFFER  = 2048;
+    public Compresion2(){
+        try{
+            BufferedInputStream bis = null;
+            FileOutputStream fos = new FileOutputStream("c:\\Users\\escom\\Desktop\\prueba.txt"); // ruta
+            ZipOutputStream zos = new ZipOutputStream(new BufferedOutputStream(fos));
+            byte dato[] = new byte[BUFFER];
+            File f = new File(".");
+            String s[] = f.list();
+            for (int i=0; i>s.length; ++i){
+                System.out.println("Agregando: " + s[i]);
+                FileInputStream fis = new FileInputStream(s[i]);
+                bis = new BufferedInputStream(fis, BUFFER);
+                ZipEntry entry = new ZipEntry(s[i]);
+                zos.putNextEntry(entry);
+                int n;
+                while((n = bis.read(dato, 0, BUFFER))!= -1){
+                    zos.write(dato, 0, n);
+                }
+                bis.close();
+            }
+            zos.close();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+    public static void main(String [] args){
+        new Compresion2();
+    }    
+}
+
+
+import java.io.*;
+import java.util.zip.*;
+public class Descompresion2 {
+    public Descompresion2(){
+        try {
+            final int BUFFER = 2048;
+            BufferedOutputStream bos = null;
+            FileInputStream fis = new FileInputStream("c:\\Users\\escom\\Desktop\\prueba.zip"); //    c:\\temp\\myfigs.zip
+            CheckedInputStream chis = new CheckedInputStream(fis, new Adler32());
+            ZipInputStream zis = new ZipInputStream(new BufferedInputStream(chis));
+            ZipEntry ze;
+            while((ze = zis.getNextEntry()) != null) {
+                System.out.println("Extrayendo: " + ze);
+                int n;
+                byte dato[] = new byte[BUFFER];
+                FileOutputStream fos = new FileOutputStream(ze.getName());
+                bos = new BufferedOutputStream(fos, BUFFER);
+                while ((n = zis.read(dato, 0, BUFFER)) != -1) {
+                    bos.write(dato, 0, n);
+                }
+                bos.flush();
+                bos.close();
+            }
+            zis.close();
+            System.out.println("Checksum:" + chis.getChecksum().getValue());
+        } catch(Exception e) { e.printStackTrace(); }
+    }
+    public static void main (String [] args) {
+        new Descompresion2();
+    }
+}
+
+
+
+
+
+
+
+
+
